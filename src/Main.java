@@ -1,6 +1,6 @@
 import javax.swing.JOptionPane;
 
-public class CalendarGenerator {
+public class Main {
     public static void main(String[] args) {
 
         String monthInput = JOptionPane.showInputDialog("Введите номер месяца (1-12) или его сокращенное название (Янв.-Дек.):");
