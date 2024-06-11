@@ -1,46 +1,82 @@
-import java.util.Scanner;
+import javax.swing.JOptionPane;
 
-public class Main {
-
+public class CalendarGenerator {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Выберите цель расчета: ");
-        System.out.println("1. Площадь");
-        System.out.println("2. Длина окружности");
-        int choice = scanner.nextInt();
+        String monthInput = JOptionPane.showInputDialog("Введите номер месяца (1-12) или его сокращенное название (Янв.-Дек.):");
+        int month = getMonthFromString(monthInput);
 
-        double radius;
-        do {
-            System.out.println("Введите радиус:");
-            while (!scanner.hasNextDouble()) {
-                System.out.println("Некорректный ввод. Пожалуйста, введите число:");
-                scanner.next();
-            }
-            radius = scanner.nextDouble();
-        } while (radius <= 0);
 
-        switch (choice) {
-            case 1:
-                double area = calculateArea(radius);
-                System.out.println("Площадь круга: " + area);
-                break;
-            case 2:
-                double circumference = calculateCircumference(radius);
-                System.out.println("Длина окружности: " + circumference);
-                break;
+        String yearInput = JOptionPane.showInputDialog("Введите год (1900-2100):");
+        int year = Integer.parseInt(yearInput);
+
+
+        String calendar = generateCalendar(month, year);
+        JOptionPane.showMessageDialog(null, calendar);
+    }
+
+
+    private static int getMonthFromString(String monthInput) {
+        switch (monthInput.toLowerCase()) {
+            case "янв.":
+                return 1;
+            case "фев.":
+                return 2;
+            case "мар.":
+                return 3;
+            case "апр.":
+                return 4;
+            case "май":
+            case "мая":
+                return 5;
+            case "июн.":
+                return 6;
+            case "июл.":
+                return 7;
+            case "авг.":
+                return 8;
+            case "сен.":
+                return 9;
+            case "окт.":
+                return 10;
+            case "ноя.":
+                return 11;
+            case "дек.":
+                return 12;
             default:
-                System.out.println("Некорректный выбор.");
+                return Integer.parseInt(monthInput);
+        }
+    }
+
+
+    private static String generateCalendar(int month, int year) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.format("Календарь на %d %d:\n", month, year));
+
+
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.set(year, month - 1, 1);
+        int startDayOfWeek = calendar.get(java.util.Calendar.DAY_OF_WEEK);
+
+
+        int daysInMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH);
+
+
+        sb.append("Пн Вт Ср Чт Пт Сб Вс\n");
+
+
+        for (int i = 1; i < startDayOfWeek; i++) {
+            sb.append("   ");
         }
 
-        scanner.close();
-    }
 
-    public static double calculateArea(double radius) {
-        return Math.PI * radius * radius;
-    }
+        for (int day = 1; day <= daysInMonth; day++) {
+            sb.append(String.format("%2d ", day));
+            if ((startDayOfWeek + day - 1) % 7 == 0) {
+                sb.append("\n");
+            }
+        }
 
-    public static double calculateCircumference(double radius) {
-        return 2 * Math.PI * radius;
+        return sb.toString();
     }
 }
